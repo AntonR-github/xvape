@@ -18,21 +18,21 @@ export default function Hero() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative bg-black overflow-hidden min-h-screen flex items-center">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <section className="relative bg-black overflow-hidden min-h-full mt-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-full">
 
             {/* Text — first child = right side in RTL */}
-            <div className="flex flex-col items-end text-end order-first">
-              <h1 className="text-5xl sm:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-5">
+            <div className="flex flex-col items-end text-start justify-start pt-2 pb-24 pe-28 order-first">
+              <h1 className="mb-5">
                 הפתרון המתקדם
                 <br />
                 לבערה הישירה
               </h1>
-              <p className="text-lg mb-10 max-w-sm" style={{ color: "#eeeeee", opacity: 0.65 }}>
+              <p className="text-2xl mb-10 max-w-lg" style={{ color: "white" }}>
                 טכנולוגיית אידוי חכמה שמוציאה יותר בכל שאיפה
               </p>
-              <div className="flex items-center gap-3 flex-wrap justify-end">
+              <div className="flex items-center gap-3 flex-wrap justify-end w-full">
                 <Link
                   href="/shop"
                   className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full font-semibold text-black text-sm transition-opacity hover:opacity-85"
@@ -54,26 +54,26 @@ export default function Hero() {
             </div>
 
             {/* Image — second child = left side in RTL */}
-            <div className="relative flex items-center justify-center h-[420px] lg:h-[520px]">
+            <div className="relative flex items-end justify-center overflow-hidden">
               {/* Sparkle stars */}
-              <Sparkle className="absolute top-10 end-8 w-5 h-5 text-white opacity-60" />
+              <Sparkle className="absolute top-20 end-8 w-5 h-5 text-white opacity-60" />
               <Sparkle className="absolute top-1/3 start-6 w-3.5 h-3.5 text-white opacity-35" />
               <Sparkle className="absolute bottom-1/3 end-16 w-2.5 h-2.5 text-white opacity-25" />
               <Sparkle className="absolute bottom-16 start-1/3 w-4 h-4 text-white opacity-40" />
 
               {/* Bottom glow */}
               <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-24 blur-3xl rounded-full"
-                style={{ background: "rgba(198,168,122,0.18)" }}
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-32 blur-3xl rounded-full"
+                style={{ background: "rgba(198,168,122,0.2)" }}
               />
 
-              {/* Hero image */}
+              {/* Hero image — fills the column height */}
               <Image
                 src="/assets/img/hp.png"
                 alt="מכשיר וייפינג"
-                width={320}
-                height={420}
-                className="relative z-10 object-contain drop-shadow-2xl"
+                width={640}
+                height={800}
+                className="relative z-10 object-contain object-bottom drop-shadow-2xl max-h-screen w-auto"
                 priority
               />
             </div>
