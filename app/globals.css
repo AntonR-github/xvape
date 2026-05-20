@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* ── Almoni DL AAA ── */
+@font-face {
+  font-family: "Almoni";
+  src: url("/fonts/almoni-dl-aaa-light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Almoni";
+  src: url("/fonts/almoni-dl-aaa-regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Almoni";
+  src: url("/fonts/almoni-dl-aaa-bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Almoni";
+  src: url("/fonts/almoni-dl-aaa-black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  /* Font */
+  --font-sans: "Almoni", Arial, sans-serif;
+
+  /* Palette */
+  --color-bg:      #000000;
+  --color-surface: #121212;
+  --color-accent:  #c6a87a;
+  --color-light:   #eeeeee;
+  --color-white:   #ffffff;
+
+  /* Type scale */
+  --text-xs:   0.75rem;   /* 12px — captions, labels */
+  --text-sm:   0.875rem;  /* 14px — body small */
+  --text-base: 1rem;      /* 16px — body */
+  --text-lg:   1.125rem;  /* 18px — body large */
+  --text-xl:   1.25rem;   /* 20px — subheadings */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-3xl:  1.875rem;  /* 30px */
+  --text-4xl:  2.25rem;   /* 36px — section titles */
+  --text-5xl:  3rem;      /* 48px — page headings */
+  --text-6xl:  3.75rem;   /* 60px — hero title */
+  --text-7xl:  4.5rem;    /* 72px — hero title xl */
+}
+
+/* Base */
+body {
+  font-family: "Almoni", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  background-color: #000000;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #52525b; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #c6a87a; }
