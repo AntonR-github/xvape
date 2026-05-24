@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 function Sparkle({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -6,38 +8,30 @@ function Sparkle({ className }: { className?: string }) {
   );
 }
 
-function TruckIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-    </svg>
-  );
-}
-
 const stores = [
+  {
+    id: "online",
+    name: "באתר",
+    details: "משלוח עד הבית\nתוך 3-5 ימי עסקים",
+    icon: "/assets/icn/truck.png",
+  },
   {
     id: "store-1",
     name: "חנות",
     details: "פרטי החנות כתובת\nטלפון ופרטי קשר",
-    icon: null,
+    icon: "/assets/icn/store.png",
   },
   {
     id: "store-2",
     name: "חנות",
     details: "פרטי החנות כתובת\nטלפון ופרטי קשר",
-    icon: null,
+    icon: "/assets/icn/store.png",
   },
   {
     id: "store-3",
     name: "חנות",
     details: "פרטי החנות כתובת\nטלפון ופרטי קשר",
-    icon: null,
-  },
-  {
-    id: "online",
-    name: "באתר",
-    details: "משלוח עד הבית\nתוך 3-5 ימי עסקים",
-    icon: <TruckIcon />,
+    icon: "/assets/icn/store.png",
   },
 ];
 
@@ -45,22 +39,20 @@ export default function BrandSection() {
   return (
     <>
       {/* ── Brand split ── */}
-      <section className="bg-black overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-center min-h-[520px]">
+      {/* py-16 = 64px top/bottom — image uses -my-16 to bleed past it */}
+      <section className="bg-black relative py-16 overflow-visible">
 
-            {/* Text — first in DOM = right side in RTL */}
-            <div className="flex flex-col items-end text-end py-20 lg:ps-16 order-first">
-              {/* Logo placeholder */}
-              <span className="text-xl font-black tracking-tight mb-6" style={{ color: "#eeeeee" }}>
-                X<span style={{ color: "#c6a87a" }}>V</span>APE
-              </span>
+        {/* Full-width surface stripe behind the content */}
+        <div className="absolute inset-x-0 top-16 bottom-16" style={{ background: "var(--color-surface)" }} />
 
-              <h2 className="text-4xl sm:text-5xl font-black text-white leading-tight mb-6">
-                המותג שמאחורי המכשיר
-              </h2>
+        <div className="site-container px-6 lg:px-12 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-              <p className="text-base leading-loose max-w-sm" style={{ color: "#eeeeee", opacity: 0.6 }}>
+            {/* Text — right side in RTL, sits on top of the stripe */}
+            <div className="flex flex-col items-start text-start py-14 px-4 order-first">
+              <Image src="/assets/logo.svg" alt="XVAPE" width={60} height={28} className="h-5 w-auto" />
+              <h2 className="mb-6" style={{ fontSize: "clamp(2.2rem, 3.8vw, 3.6rem)"}}>המותג שמאחורי המכשיר</h2>
+              <p className="paragraph" style={{ fontSize: "clamp(1.2rem, 1.9vw, 1.5rem)" }}>
                 XVAPE הוא מותג ווופורייזרים העולמי המוביל בתחום האידוי.
                 <br />
                 עם נוכחות ביותר מ-30 מדינות ומיליוני משתמשים ברחבי העולם.
@@ -69,28 +61,24 @@ export default function BrandSection() {
               </p>
             </div>
 
-            {/* Image — second in DOM = left side in RTL */}
-            <div className="relative flex items-end justify-center h-[480px] lg:h-[560px]">
-              {/* Sparkles */}
-              <Sparkle className="absolute top-12 inset-e-12 w-4 h-4 text-white opacity-50" />
-              <Sparkle className="absolute top-1/3 inset-s-10 w-3 h-3 text-white opacity-30" />
-              <Sparkle className="absolute bottom-1/4 inset-e-1/3 w-2.5 h-2.5 text-white opacity-20" />
-
-              {/* Bottom glow */}
+            {/* Image — bleeds above and below stripe using -my-16 */}
+            <div
+              className="relative rounded-2xl overflow-hidden mt-16"
+              style={{ minHeight: "540px" }}
+            >
+              <Sparkle className="absolute top-12 inset-e-12 w-4 h-4 text-white opacity-50 z-10" />
+              <Sparkle className="absolute top-1/3 inset-s-10 w-3 h-3 text-white opacity-30 z-10" />
+              <Sparkle className="absolute bottom-1/4 inset-e-1/3 w-2.5 h-2.5 text-white opacity-20 z-10" />
               <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-72 h-20 blur-3xl rounded-full"
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-72 h-20 blur-3xl rounded-full z-0"
                 style={{ background: "rgba(198,168,122,0.15)" }}
               />
-
-              {/* Image placeholder */}
-              <div
-                className="relative z-10 w-72 h-[420px] rounded-2xl flex items-center justify-center border mb-0"
-                style={{ background: "#111111", borderColor: "rgba(255,255,255,0.06)" }}
-              >
-                <span className="text-xs" style={{ color: "#eeeeee", opacity: 0.25 }}>
-                  תמונת מוצר
-                </span>
-              </div>
+              <Image
+                src="/assets/img/brand-image.jpg"
+                alt="XVAPE brand"
+                fill
+                className="object-contain"
+              />
             </div>
 
           </div>
@@ -99,18 +87,13 @@ export default function BrandSection() {
 
       {/* ── Store locator ── */}
       <section className="py-20 px-6 lg:px-12" style={{ background: "#0d0d0d" }}>
-        <div className="max-w-7xl mx-auto">
+        <div className="site-container">
 
           {/* Title */}
-          <h2 className="text-4xl sm:text-5xl font-black text-white text-center mb-12">
+          <h2 className="text-4xl sm:text-5xl font-regular text-white text-center mb-12">
             היכן ניתן להשיג
           </h2>
-
-          {/* Cards label */}
-          <p className="text-xs font-medium mb-4 text-end" style={{ color: "#eeeeee", opacity: 0.4 }}>
-            ניתן להשיג
-          </p>
-
+          
           {/* Store cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {stores.map((store) => (
@@ -120,22 +103,15 @@ export default function BrandSection() {
                 style={{ background: "#1a1a1a", borderColor: "rgba(255,255,255,0.07)" }}
               >
                 {/* Icon */}
-                <div className="h-12 flex items-center justify-center" style={{ color: "#c6a87a" }}>
-                  {store.icon ?? (
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold border"
-                      style={{ borderColor: "rgba(255,255,255,0.1)", color: "#eeeeee", opacity: 0.4 }}
-                    >
-                      לוגו
-                    </div>
-                  )}
+                <div className="h-14 flex items-center justify-center">
+                  <Image src={store.icon} alt={store.name} width={64} height={64} className="h-12 w-auto icon-accent" />
                 </div>
 
                 {/* Store name */}
-                <span className="font-bold text-white text-base">{store.name}</span>
+                <span className="font-bold text-white text-2xl">{store.name}</span>
 
                 {/* Details */}
-                <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "#eeeeee", opacity: 0.45 }}>
+                <p className="text-lg leading-relaxed whitespace-pre-line paragraph">
                   {store.details}
                 </p>
               </div>

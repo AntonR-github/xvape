@@ -2,16 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { products } from "../components/ProductCard";
 
-const featureRows = [
-  { label: "מחיר",    values: ["₪649", "₪549", "₪499", "₪299"] },
-  { label: "חימום",   values: ["קונבקציה", "קונבקציה", "הולכות", "חם"] },
-  { label: "פעולה",   values: ["שלמי", "משולב", "טורנירות", "פשוט"] },
-  { label: "סוללה",   values: ["3200mAh (מובנה)", "3200mAh (מובנה)", "2600mAh", "1000mAh"] },
-  { label: "מסך",     values: ["OLED", "OLED", "LED", "ללא"] },
-  { label: "אחריות",  values: ["שנה אחת", "שנה אחת", "שנה אחת", "שנה אחת"] },
-];
+// Max features across all products
+const maxFeatures = Math.max(...products.map((p) => p.features.length));
 
 export default function CompareClient() {
   const [selectedId, setSelectedId] = useState("fog-pro");
@@ -19,128 +14,127 @@ export default function CompareClient() {
 
   return (
     <section className="py-20 px-6 lg:px-12">
-      <div className="max-w-5xl mx-auto">
+      <div className="site-container">
 
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-black text-white mb-4">
-            השוואת דגמים
-          </h1>
-          <p className="text-base" style={{ color: "#eeeeee", opacity: 0.5 }}>
+        <div className="text-center mb-14">
+          <h1 className="title-h2 mb-4">השוואת דגמים</h1>
+          <p className="paragraph">
             השוואה ממוקדת של מאידים מובילים כדי לעזור לך לבחור את המוצר המתאים עבורך
           </p>
         </div>
 
-        {/* Product selector cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-          {products.map((product) => {
-            const isSelected = product.id === selectedId;
-            return (
-              <div
-                key={product.id}
-                className="rounded-2xl flex flex-col items-center text-center p-5 gap-3 border-2 transition-all"
-                style={{
-                  background: isSelected ? "#1a1a1a" : "#111111",
-                  borderColor: isSelected ? "#c6a87a" : "rgba(255,255,255,0.07)",
-                }}
-              >
-                {/* Image placeholder */}
-                <div
-                  className="w-full h-28 rounded-xl flex items-center justify-center"
-                  style={{ background: "#222222" }}
-                >
-                  <span className="text-[10px]" style={{ color: "#eeeeee", opacity: 0.2 }}>
-                    תמונה
-                  </span>
-                </div>
-
-                <span className="font-bold text-white text-sm">{product.name}</span>
-                <span className="font-black text-white text-base">₪{product.price}</span>
-
-                <button
-                  onClick={() => setSelectedId(product.id)}
-                  className="w-full py-2 rounded-full text-xs font-semibold border transition-colors"
-                  style={
-                    isSelected
-                      ? { background: "#c6a87a", borderColor: "#c6a87a", color: "#000000" }
-                      : { borderColor: "rgba(255,255,255,0.2)", color: "#eeeeee" }
-                  }
-                >
-                  בחר מוצר
-                </button>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Comparison table */}
+        {/* Unified comparison table */}
         <div
           className="rounded-2xl overflow-hidden border"
           style={{ borderColor: "rgba(255,255,255,0.07)" }}
         >
-          {/* Table header row — product names */}
-          <div
-            className="grid border-b"
-            style={{
-              gridTemplateColumns: "1.4fr repeat(4, 1fr)",
-              borderColor: "rgba(255,255,255,0.08)",
-              background: "#111111",
-            }}
-          >
-            {/* Feature column header */}
-            <div
-              className="px-5 py-4 text-end text-xs font-bold uppercase tracking-widest"
-              style={{ color: "#eeeeee", opacity: 0.4 }}
-            >
-              תכונה
-            </div>
-            {products.map((product, i) => (
-              <div
-                key={product.id}
-                className="px-3 py-4 text-center text-sm font-bold transition-colors"
-                style={{
-                  color: i === selectedIndex ? "#c6a87a" : "#ffffff",
-                  background: i === selectedIndex ? "rgba(198,168,122,0.08)" : "transparent",
-                }}
-              >
-                {product.name}
-              </div>
-            ))}
+          {/* Row: product images */}
+          <div className="grid grid-cols-4">
+            {products.map((product, i) => {
+              const isSelected = i === selectedIndex;
+              return (
+                <div
+                  key={product.id}
+                  className="p-4 border-b border-e last:border-e-0"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.07)",
+                    borderTopWidth: isSelected ? "2px" : "1px",
+                    borderTopColor: isSelected ? "#c6a87a" : "rgba(255,255,255,0.07)",
+                  }}
+                >
+                  <div className="relative w-full rounded-xl overflow-hidden" style={{ height: "280px" }}>
+                    <Image
+                      src="/assets/img/product-test-img.jpeg"
+                      alt={product.name}
+                      fill
+                      className="object-contain p-2"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Row: name + price */}
+          <div className="grid grid-cols-4 border-b" style={{ borderColor: "rgba(255,255,255,0.07)", background: "#111111" }}>
+            {products.map((product, i) => {
+              const isSelected = i === selectedIndex;
+              return (
+                <div
+                  key={product.id}
+                  className="px-4 py-4 text-start border-e last:border-e-0 flex flex-col gap-1"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.07)",
+                    background: isSelected ? "rgba(198,168,122,0.06)" : "transparent",
+                  }}
+                >
+                  <span className="font-regular text-3xl" style={{ color: isSelected ? "#c6a87a" : "#ffffff" }}>
+                    {product.name}
+                  </span>
+                  <span className="font-regular text-3xl text-white">₪{product.price}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Row: select button */}
+          <div className="grid grid-cols-4 border-b" style={{ borderColor: "rgba(255,255,255,0.07)", background: "#111111" }}>
+            {products.map((product, i) => {
+              const isSelected = i === selectedIndex;
+              return (
+                <div
+                  key={product.id}
+                  className="px-4 py-3 flex justify-center border-e last:border-e-0"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.07)",
+                    background: isSelected ? "rgba(198,168,122,0.06)" : "transparent",
+                  }}
+                >
+                  <button
+                    onClick={() => setSelectedId(product.id)}
+                    className="px-12 py-2 rounded-full text-base font-semibold border transition-colors"
+                    style={
+                      isSelected
+                        ? { background: "#c6a87a", borderColor: "#c6a87a", color: "#000000" }
+                        : { borderColor: "rgba(255,255,255,0.2)", color: "#eeeeee" }
+                    }
+                  >
+                    בחר מוצר
+                  </button>
+                </div>
+              );
+            })}
           </div>
 
           {/* Feature rows */}
-          {featureRows.map((row, rowIdx) => (
+          {Array.from({ length: maxFeatures }, (_, fi) => (
             <div
-              key={row.label}
-              className="grid border-b last:border-b-0"
+              key={fi}
+              className="grid grid-cols-4 border-b last:border-b-0"
               style={{
-                gridTemplateColumns: "1.4fr repeat(4, 1fr)",
                 borderColor: "rgba(255,255,255,0.05)",
-                background: rowIdx % 2 === 0 ? "#0d0d0d" : "#111111",
+                background: fi % 2 === 0 ? "#0d0d0d" : "#111111",
               }}
             >
-              {/* Feature label */}
-              <div
-                className="px-5 py-4 text-end text-sm font-semibold"
-                style={{ color: "#eeeeee", opacity: 0.55 }}
-              >
-                {row.label}
-              </div>
-
-              {/* Product values */}
-              {row.values.map((val, i) => (
-                <div
-                  key={i}
-                  className="px-3 py-4 text-center text-sm"
-                  style={{
-                    color: i === selectedIndex ? "#ffffff" : "#eeeeee",
-                    opacity: i === selectedIndex ? 1 : 0.6,
-                    background: i === selectedIndex ? "rgba(198,168,122,0.06)" : "transparent",
-                  }}
-                >
-                  {val}
-                </div>
-              ))}
+              {products.map((product, i) => {
+                const isSelected = i === selectedIndex;
+                return (
+                  <div
+                    key={product.id}
+                    className="px-4 py-4 text-center text-lg border-e last:border-e-0"
+                    style={{
+                      borderColor: "rgba(255,255,255,0.05)",
+                      color: "#eeeeee",
+                      opacity: isSelected ? 1 : 0.6,
+                      fontWeight: isSelected ? 400 : 300,
+                      background: isSelected ? "rgba(198,168,122,0.04)" : "transparent",
+                    }}
+                  >
+                    {product.features[fi] ?? "—"}
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -149,7 +143,7 @@ export default function CompareClient() {
         <div className="flex justify-center mt-10">
           <Link
             href={`/shop/${selectedId}`}
-            className="inline-flex items-center px-8 py-3.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-85 text-black"
+            className="inline-flex items-center px-8 py-3.5 rounded-full text-base font-semibold transition-opacity hover:opacity-85 text-black"
             style={{ background: "#c6a87a" }}
           >
             עבור לדף המוצר הנבחר

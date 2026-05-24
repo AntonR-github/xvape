@@ -1,144 +1,157 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Product } from "../../components/ProductCard";
+import type { StoreProduct as Product } from "../../lib/medusa";
 import { useCart } from "../../context/CartContext";
 
 function CheckIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className="w-4 h-4 shrink-0"
-    >
-      <path
-        fillRule="evenodd"
-        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-        clipRule="evenodd"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 shrink-0">
+      <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clipRule="evenodd" />
     </svg>
   );
 }
 
+const FALLBACK_IMG = "/assets/img/product-test-img.jpeg";
+
 export default function ProductDetail({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
-  const [selectedThumb, setSelectedThumb] = useState(2);
+  const [selectedThumb, setSelectedThumb] = useState(0);
   const { addItem } = useCart();
   const router = useRouter();
 
-  return (
-    <section className="py-16 px-6 lg:px-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+  // Build image list: all product images, or fallback
+  const allImages = product.images?.length
+    ? product.images
+    : product.thumbnail
+    ? [product.thumbnail]
+    : [FALLBACK_IMG];
+  const activeImg = allImages[selectedThumb] ?? FALLBACK_IMG;
 
-          {/* ── Product info — right side in RTL ── */}
-          <div className="flex flex-col items-end text-end gap-5 order-first">
+  return (
+    <section className="py-16 px-6 lg:px-12 bg-white">
+      <div className="site-container">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+
+          {/* ── Image gallery — first in DOM = right side in RTL ── */}
+          <div className="flex flex-col gap-4">
+            {/* Main image */}
+            <div
+              className="rounded-3xl overflow-hidden flex items-center justify-center"
+              style={{ aspectRatio: "1 / 1", maxHeight: "460px" }}
+            >
+              <Image
+                src={activeImg}
+                alt={product.name}
+                width={700}
+                height={700}
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            {/* Thumbnails */}
+            {allImages.length > 1 && (
+              <div className="flex gap-3 justify-center">
+                {allImages.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedThumb(i)}
+                    className="rounded-xl border-2 overflow-hidden transition-all"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderColor: selectedThumb === i ? "#c6a87a" : "#e0e0e0",
+                      background: "#111111",
+                    }}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.name} ${i + 1}`}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-contain"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Product info — second in DOM = left side in RTL ── */}
+          <div className="flex flex-col items-start text-start gap-2">
+
             {/* Badge */}
             <span
-              className="text-xs font-semibold text-white px-3 py-1 rounded-full"
+              className="text-sm font-semibold text-white px-4 py-1.5 rounded-full"
               style={{ background: "#1a1a1a" }}
             >
               {product.badge}
             </span>
 
             {/* Name */}
-            <h1 className="text-4xl font-black text-black leading-tight">
+            <h1 className="text-5xl font-regular text-black leading-tight">
               {product.name}
             </h1>
 
             {/* Price */}
-            <div className="text-3xl font-black text-black">
+            <div className="text-4xl font-regular text-black">
               ₪{product.price}
             </div>
 
             {/* Feature list */}
-            <ul className="flex flex-col gap-3 w-full">
+            <ul className="flex flex-col gap-3 w-full mt-6">
               {product.features.map((f) => (
-                <li key={f} className="flex items-center justify-end gap-2 text-sm text-black">
-                  <span>{f}</span>
-                  <span style={{ color: "#c6a87a" }}>
+                <li key={f} className="flex items-center justify-start gap-2 text-xl font-regular text-black tracking-wider">
+                   <span style={{ color: "#c6a87a" }}>
                     <CheckIcon />
                   </span>
+                  <span>{f}</span>
                 </li>
               ))}
             </ul>
 
             {/* Quantity */}
-            <div className="flex flex-col items-end gap-2 w-full">
-              <span className="text-sm font-medium text-black">כמות:</span>
-              <div
-                className="flex items-center gap-4 border rounded-full px-5 py-2.5"
-                style={{ borderColor: "#d0d0d0" }}
-              >
+            <div className="flex flex-col items-start gap-2 w-full mt-10 mb-6">
+              <span className="text-xl font-regular text-black">כמות:</span>
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setQty((q) => q + 1)}
-                  className="text-lg font-bold text-black hover:opacity-60 transition-opacity w-5 text-center"
-                >
-                  +
-                </button>
-                <span className="text-base font-semibold text-black w-5 text-center">
-                  {qty}
-                </span>
+                  className="w-11 h-11 rounded-xl border flex items-center justify-center text-lg font-semibold text-black hover:opacity-60 transition-opacity"
+                  style={{ borderColor: "#d0d0d0" }}
+                >+</button>
+                <span
+                  className="w-11 h-11 rounded-xl border flex items-center justify-center text-base font-semibold text-black"
+                  style={{ borderColor: "#d0d0d0" }}
+                >{qty}</span>
                 <button
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="text-lg font-bold text-black hover:opacity-60 transition-opacity w-5 text-center"
-                >
-                  −
-                </button>
+                  className="w-11 h-11 rounded-xl border flex items-center justify-center text-lg font-semibold text-black hover:opacity-60 transition-opacity"
+                  style={{ borderColor: "#d0d0d0" }}
+                >−</button>
               </div>
             </div>
 
             {/* CTA buttons */}
-            <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col-2 gap-3 items-start w-full">
               <button
-                className="w-full py-4 rounded-full font-bold text-white text-sm transition-opacity hover:opacity-85"
-                style={{ background: "#1a1a1a" }}
-                onClick={() => addItem({ id: product.id, name: product.name, price: product.price }, qty)}
+                className="px-8 py-4 rounded-full font-regular text-white text-lg tracking-[0.07em] bg-[#1a1a1a] border border-[#1a1a1a] transition-colors hover:bg-white hover:text-black"
+                onClick={() => addItem({ id: product.id, name: product.name, price: product.price, variantId: product.variantId }, qty)}
               >
-                הוסף לעגלה - ₪{product.price * qty}
+                הוסף לעגלה — ₪{product.price * qty}
               </button>
               <button
-                className="w-full py-4 rounded-full font-bold text-sm border transition-colors hover:bg-black hover:text-white"
-                style={{ borderColor: "#1a1a1a", color: "#1a1a1a" }}
-                onClick={() => { addItem({ id: product.id, name: product.name, price: product.price }, qty); router.push("/checkout"); }}
+                className="px-8 py-4 rounded-full font-regular text-lg bg-white border border-[#1a1a1a] text-[#1a1a1a] tracking-[0.07em] transition-colors hover:bg-black hover:text-white"
+                onClick={() => {
+                  addItem({ id: product.id, name: product.name, price: product.price, variantId: product.variantId }, qty);
+                  router.push("/checkout");
+                }}
               >
                 קנה עכשיו
               </button>
             </div>
-          </div>
 
-          {/* ── Image gallery — left side in RTL ── */}
-          <div className="flex flex-col gap-4">
-            {/* Main image */}
-            <div
-              className="rounded-2xl overflow-hidden h-80 flex items-center justify-center"
-              style={{ background: "#111111" }}
-            >
-              <span className="text-xs" style={{ color: "#eeeeee", opacity: 0.25 }}>
-                תמונת מוצר
-              </span>
-            </div>
-
-            {/* Thumbnails */}
-            <div className="flex gap-3 justify-end">
-              {[0, 1, 2].map((i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedThumb(i)}
-                  className="w-16 h-16 rounded-xl border-2 transition-all flex items-center justify-center"
-                  style={{
-                    background: "#e4e4e4",
-                    borderColor: selectedThumb === i ? "#c6a87a" : "transparent",
-                  }}
-                >
-                  <span className="text-[10px]" style={{ color: "#aaaaaa" }}>
-                    {i + 1}
-                  </span>
-                </button>
-              ))}
-            </div>
           </div>
 
         </div>

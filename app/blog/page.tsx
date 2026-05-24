@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -7,8 +8,15 @@ interface Post {
   title: string;
   excerpt: string;
   date: string;
+  image: string;
   featured?: boolean;
 }
+
+const blogImages = [
+  "/assets/img/blog1.png",
+  "/assets/img/blog2.png",
+  "/assets/img/blog3.jpg",
+];
 
 const posts: Post[] = [
   {
@@ -17,6 +25,7 @@ const posts: Post[] = [
     excerpt:
       "גלו כיצד טכנולוגיה מודרנית פוגשת מסורות עתיקות כדי לייצר חוויית רוגע משולמת בחיי היומיום.",
     date: "15 בינואר, 2024",
+    image: blogImages[0],
     featured: true,
   },
   {
@@ -25,6 +34,7 @@ const posts: Post[] = [
     excerpt:
       "סקירה מעמיקה של המכשירים הניידים המובילים בשוק — ביצועים, עיצוב ומחיר פנים אל פנים.",
     date: "28 בינואר, 2024",
+    image: blogImages[1],
   },
   {
     id: "conduction-vs-convection",
@@ -32,6 +42,7 @@ const posts: Post[] = [
     excerpt:
       "הולכת חום מחממת במגע ישיר, בעוד קונבקציה עובדת עם זרימת אוויר חם לחימום אחיד ונקי יותר.",
     date: "5 בפברואר, 2024",
+    image: blogImages[2],
   },
   {
     id: "beginners-guide",
@@ -39,6 +50,7 @@ const posts: Post[] = [
     excerpt:
       "כל מה שצריך לדעת כדי להתחיל נכון — מבחירת המכשיר ועד חוויית שימוש חלקה ונעימה.",
     date: "19 בינואר, 2024",
+    image: blogImages[0],
   },
   {
     id: "vaping-outdoors",
@@ -46,6 +58,7 @@ const posts: Post[] = [
     excerpt:
       "מדריך מקיף לאידוי בחוצות — בחירת הציוד הנכון, תחזוקה בשטח ושמירה על חוויה מיטבית.",
     date: "9 בפברואר, 2024",
+    image: blogImages[1],
   },
   {
     id: "flavor-guide",
@@ -53,6 +66,7 @@ const posts: Post[] = [
     excerpt:
       "דריכה לעולם הטעמים והארומות של צמחי מרפא — כיצד לזהות, להשוות ולמצוא את האהוב עליכם.",
     date: "12 בדצמבר, 2024",
+    image: blogImages[2],
   },
   {
     id: "cleaning-guide",
@@ -60,6 +74,7 @@ const posts: Post[] = [
     excerpt:
       "שמירה על ניקיון המכשיר מבטיחה טעם נקי, ביצועים טובים יותר ואורך חיים ארוך יותר.",
     date: "26 בפברואר, 2024",
+    image: blogImages[0],
   },
 ];
 
@@ -81,14 +96,14 @@ export default function BlogPage() {
     <>
       <Navbar />
       <main className="flex-1 bg-black py-20 px-6 lg:px-12">
-        <div className="max-w-5xl mx-auto">
+        <div className="site-container">
 
           {/* Header */}
           <div className="text-center mb-14">
-            <h1 className="text-4xl sm:text-5xl font-black text-white mb-4">
+            <h2 className="title-h2 mb-4">
               הבלוג שלנו
-            </h1>
-            <p className="text-base" style={{ color: "#eeeeee", opacity: 0.5 }}>
+            </h2>
+            <p className="text-2xl font-light">
               מגזין סגנון חיים, בריאות ורוגע. גלו את האיזון המושלם.
             </p>
           </div>
@@ -99,29 +114,29 @@ export default function BlogPage() {
             style={{ background: "#111111" }}
           >
             {/* Image — first in DOM = right side in RTL */}
-            <div
-              className="h-64 lg:h-auto flex items-center justify-center"
-              style={{ background: "#1e1e1e" }}
-            >
-              <span className="text-xs" style={{ color: "#eeeeee", opacity: 0.2 }}>
-                תמונת מאמר
-              </span>
+            <div className="relative min-h-80 lg:min-h-96">
+              <Image
+                src={featured.image}
+                alt={featured.title}
+                fill
+                className="object-cover"
+              />
             </div>
 
             {/* Text — second in DOM = left side in RTL */}
-            <div className="flex flex-col items-end text-end justify-center p-8 gap-4">
-              <span className="text-xs" style={{ color: "#eeeeee", opacity: 0.4 }}>
+            <div className="flex flex-col items-start text-start justify-center p-8 gap-4">
+              <span className="text-lg" style={{ color: "#c6a87a" }}>
                 {featured.date}
               </span>
-              <h2 className="text-2xl font-black text-white leading-snug">
+              <h2 className="text-4xl font-regular text-white leading-snug">
                 {featured.title}
               </h2>
-              <p className="text-sm leading-relaxed" style={{ color: "#eeeeee", opacity: 0.55 }}>
+              <p className="text-xl font-light leading-relaxed">
                 {featured.excerpt}
               </p>
               <Link
                 href={`/blog/${featured.id}`}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold mt-2 transition-opacity hover:opacity-75"
+                className="inline-flex items-center gap-1.5 text-lg font-semibold mt-2 transition-opacity hover:opacity-75"
                 style={{ color: "#c6a87a" }}
               >
                 קרא עוד
@@ -147,7 +162,7 @@ export default function BlogPage() {
           {/* Pagination */}
           <div className="flex items-center justify-center gap-2">
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center border text-sm transition-colors hover:bg-white/5"
+              className="w-10 h-10 rounded-full flex items-center justify-center border text-base transition-colors hover:bg-white/5"
               style={{ borderColor: "rgba(255,255,255,0.15)", color: "#eeeeee" }}
               aria-label="עמוד הבא"
             >
@@ -159,14 +174,14 @@ export default function BlogPage() {
             {[3, 2].map((n) => (
               <button
                 key={n}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors hover:bg-white/5"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-base transition-colors hover:bg-white/5"
                 style={{ color: "#eeeeee", opacity: 0.5 }}
               >
                 {n}
               </button>
             ))}
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-base font-bold"
               style={{ background: "#c6a87a", color: "#000000" }}
             >
               1
@@ -188,25 +203,28 @@ function PostCard({ post }: { post: Post }) {
       style={{ background: "#111111" }}
     >
       {/* Image */}
-      <div className="h-44 flex items-center justify-center" style={{ background: "#1e1e1e" }}>
-        <span className="text-xs" style={{ color: "#eeeeee", opacity: 0.2 }}>
-          תמונת מאמר
-        </span>
+      <div className="relative h-72 w-full">
+        <Image
+          src={post.image}
+          alt={post.title}
+          fill
+          className="object-cover"
+        />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col items-end text-end gap-2 p-5">
-        <span className="text-xs" style={{ color: "#eeeeee", opacity: 0.4 }}>
+      <div className="flex flex-col items-start text-start gap-2 p-5">
+        <span className="text-lg" style={{ color: "#c6a87a" }}>
           {post.date}
         </span>
-        <h3 className="font-bold text-white text-sm leading-snug">
+        <h3 className="font-regular text-white text-3xl leading-snug">
           {post.title}
         </h3>
-        <p className="text-xs leading-relaxed" style={{ color: "#eeeeee", opacity: 0.5 }}>
+        <p className="text-lg font-regular leading-relaxed">
           {post.excerpt}
         </p>
         <div
-          className="inline-flex items-center gap-1.5 text-xs font-semibold mt-1"
+          className="inline-flex items-center gap-1.5 text-base font-semibold mt-1"
           style={{ color: "#c6a87a" }}
         >
           קרא עוד

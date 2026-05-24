@@ -45,7 +45,7 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <h2 className="text-4xl sm:text-5xl font-black text-white text-center mb-12">
+        <h2 className="title-h2 text-center mb-12">
           שאלות נפוצות
         </h2>
 
@@ -67,11 +67,15 @@ export default function FAQ() {
                 {/* Question row */}
                 <button
                   onClick={() => toggle(faq.id)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-end gap-4"
+                  className="w-full flex items-center justify-between px-6 py-5 text-start gap-4"
                   aria-expanded={isOpen}
                 >
-                  <span
-                    className="text-2xl font-light leading-none shrink-0 transition-transform duration-300"
+                  <span className="font-regular text-white text-xl flex-1 text-start">
+                    {faq.question}
+                  </span>
+
+                    <span
+                    className="text-3xl font-regular leading-none shrink-0 transition-transform duration-300"
                     style={{
                       color: "#c6a87a",
                       transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
@@ -79,15 +83,12 @@ export default function FAQ() {
                   >
                     +
                   </span>
-                  <span className="font-semibold text-white text-base flex-1 text-end">
-                    {faq.question}
-                  </span>
                 </button>
 
                 {/* Answer */}
                 {isOpen && (
-                  <div className="px-6 pb-5 text-end">
-                    <p className="text-sm leading-relaxed" style={{ color: "#eeeeee", opacity: 0.6 }}>
+                  <div className="px-6 pb-5 text-start">
+                    <p className="text-lg font-regular leading-relaxed text-white">
                       {faq.answer}
                     </p>
                   </div>

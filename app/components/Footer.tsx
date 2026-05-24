@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const columns = [
   {
@@ -35,29 +36,28 @@ const columns = [
 
 export default function Footer() {
   return (
-    <footer className="bg-black border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-14">
+    <footer className="bg-black border-t" style={{ borderColor: "white" }}>
+      <div className="site-container px-6 lg:px-12 py-14">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-10">
 
           {/* Logo + tagline — rightmost in RTL */}
-          <div className="flex flex-col items-end text-end gap-3 col-span-2 sm:col-span-1">
-            <Link href="/" className="text-white font-black text-2xl tracking-tight">
-              X<span style={{ color: "#c6a87a" }}>V</span>APE
+          <div className="flex flex-col items-start text-start gap-3 col-span-2 sm:col-span-1">
+            <Link href="/">
+              <Image src="/assets/logo.svg" alt="XVAPE" width={100} height={40} className="h-8 w-auto" />
             </Link>
-            <p className="text-xs leading-relaxed" style={{ color: "#eeeeee", opacity: 0.4 }}>
+            <p className="text-base leading-relaxed">
               המוצרים מיועדים למבוגרים בלבד (+18)
             </p>
           </div>
 
           {/* Link columns */}
           {columns.map((col) => (
-            <ul key={col.id} className="flex flex-col items-end gap-3">
+            <ul key={col.id} className="flex flex-col items-start gap-3">
               {col.links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-opacity hover:opacity-100"
-                    style={{ color: "#eeeeee", opacity: 0.55 }}
+                    className="text-xl transition-opacity hover:opacity-100"
                   >
                     {link.label}
                   </Link>
@@ -70,9 +70,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div
-          className="mt-12 pt-6 border-t text-center text-xs"
-          style={{ borderColor: "rgba(255,255,255,0.07)", color: "#eeeeee", opacity: 0.35 }}
-        >
+          className="mt-12 pt-6 border-t text-center text-base">
           כל הזכויות שמורות · XVAPE Israel {new Date().getFullYear()} ©
         </div>
       </div>
