@@ -6,7 +6,7 @@ const columns = [
     id: "nav",
     links: [
       { label: "בית", href: "/" },
-      { label: "מוצרים", href: "/products" },
+      { label: "מוצרים", href: "/shop" },
       { label: "השוואה", href: "/compare" },
       { label: "בלוג", href: "/blog" },
       { label: "צור קשר", href: "/contact" },
@@ -15,21 +15,11 @@ const columns = [
   {
     id: "support",
     links: [
-      { label: "משלוח והחזרות", href: "/shipping" },
-      { label: "אחריות", href: "/warranty" },
-      { label: "שאלות נפוצות", href: "/faq" },
-      { label: "החזרי ואחריות", href: "/returns" },
-      { label: "מדריכי שימוש", href: "/guides" },
-    ],
-  },
-  {
-    id: "legal",
-    links: [
-      { label: "מדיניות ביטולים", href: "/cancellation-policy" },
+      { label: "שאלות נפוצות", href: "/#faq" },
       { label: "תנאי שימוש", href: "/terms" },
-      { label: "מדיניות פרטיות", href: "/privacy" },
       { label: "הצהרת נגישות", href: "/accessibility" },
-      { label: "מדיניות משלוחים", href: "/shipping-policy" },
+      { label: "מדיניות משלוחים", href: "/shipping" },
+      { label: "מדיניות פרטיות", href: "/privacy" },
     ],
   },
 ];
@@ -38,10 +28,10 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t" style={{ borderColor: "white" }}>
       <div className="site-container px-6 lg:px-12 py-14">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-0">
 
-          {/* Logo + tagline — rightmost in RTL */}
-          <div className="flex flex-col items-start text-start gap-3 col-span-2 sm:col-span-1">
+          {/* Logo + tagline — centered */}
+          <div className="flex flex-col items-center text-center gap-3">
             <Link href="/">
               <Image src="/assets/logo.svg" alt="XVAPE" width={100} height={40} className="h-8 w-auto" />
             </Link>
@@ -50,9 +40,9 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Link columns */}
+          {/* Link columns - centered */}
           {columns.map((col) => (
-            <ul key={col.id} className="flex flex-col items-start gap-3">
+            <ul key={col.id} className="flex flex-col items-center gap-3 text-center">
               {col.links.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -70,8 +60,18 @@ export default function Footer() {
 
         {/* Copyright */}
         <div
-          className="mt-12 pt-6 border-t text-center text-base">
-          כל הזכויות שמורות · XVAPE Israel {new Date().getFullYear()} ©
+          className="mt-12 pt-6 border-t text-center text-base flex flex-col sm:flex-row items-center justify-center gap-2">
+          <span>כל הזכויות שמורות · B2B מרקט {new Date().getFullYear()} ©</span>
+          <span className="hidden sm:inline">|</span>
+          <a
+            href="https://www.arweblabs.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-opacity hover:opacity-100"
+            style={{ color: "var(--color-accent)" }}
+          >
+            פיתוח AR Web Labs
+          </a>
         </div>
       </div>
     </footer>
