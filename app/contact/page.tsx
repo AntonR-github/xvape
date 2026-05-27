@@ -53,8 +53,8 @@ export default function ContactPage() {
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="max-w-xl mx-auto rounded-2xl p-8 flex flex-col gap-4"
-              style={{ background: "#ffffff" }}
+              className="max-w-xl mx-auto rounded-2xl p-8 flex flex-col gap-4 border-4 border-[#c6a87a]"
+              style={{ background: "#2a2a2a" }}
             >
               {[
                 { name: "name", placeholder: "שם פרטי / שם", type: "text" },
@@ -64,7 +64,7 @@ export default function ContactPage() {
                 <div
                   key={field.name}
                   className="border-b py-3"
-                  style={{ borderColor: "#e5e5e5" }}
+                  style={{ borderColor: "#c6a87a" }}
                 >
                   <input
                     type={field.type}
@@ -72,21 +72,21 @@ export default function ContactPage() {
                     value={form[field.name as keyof typeof form]}
                     onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
                     className="w-full bg-transparent outline-none text-start text-xl placeholder:text-start"
-                    style={{ color: "#111111", caretColor: "#c6a87a" }}
+                    style={{ color: "#ffffff", caretColor: "#c6a87a" }}
                     dir="rtl"
                   />
                 </div>
               ))}
 
               {/* Textarea */}
-              <div className="border-b py-3 mb-6" style={{ borderColor: "#e5e5e5" }}>
+              <div className="border-b py-3 mb-6" style={{ borderColor: "#c6a87a" }}>
                 <textarea
                   placeholder="הודעה"
                   rows={4}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className="w-full bg-transparent outline-none resize-none text-start text-xl placeholder:text-start"
-                  style={{ color: "#111111", caretColor: "#c6a87a" }}
+                  style={{ color: "#ffffff", caretColor: "#c6a87a" }}
                   dir="rtl"
                 />
               </div>
@@ -99,8 +99,8 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="px-10 py-2.5 rounded-full text-xl font-regular text-black transition-opacity hover:opacity-85 disabled:opacity-60"
-                  style={{ background: "var(--color-accent-gradient)" }}
+                  className="px-10 py-2.5 rounded-full text-xl font-regular text-black transition-opacity hover:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                  style={{ background: "var(--color-gold)" }}
                 >
                   {status === "sending" ? "שולח..." : "שליחה"}
                 </button>

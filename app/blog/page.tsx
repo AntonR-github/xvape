@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -17,6 +18,22 @@ const blogImages = [
   "/assets/img/blog2.png",
   "/assets/img/blog3.jpg",
 ];
+
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "XVape בלוג",
+  url: "https://xvape.co.il/blog",
+  description: "מגזין סגנון חיים, בריאות ורוגע. גלו את האיזון המושלם.",
+  publisher: {
+    "@type": "Organization",
+    name: "XVape",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://xvape.co.il/assets/logo.svg",
+    },
+  },
+};
 
 const posts: Post[] = [
   {
@@ -95,6 +112,14 @@ export default function BlogPage() {
   return (
     <>
       <Navbar />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(blogSchema),
+          }}
+        />
+      </head>
       <main className="flex-1 bg-black py-20 px-6 lg:px-12">
         <div className="site-container">
 

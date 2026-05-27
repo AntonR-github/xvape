@@ -62,16 +62,6 @@ export default function Footer() {
         <div
           className="mt-12 pt-6 border-t text-center text-base flex flex-col sm:flex-row items-center justify-center gap-2">
           <span>כל הזכויות שמורות · B2B מרקט {new Date().getFullYear()} ©</span>
-          <span className="hidden sm:inline">|</span>
-          <a
-            href="https://www.arweblabs.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-opacity hover:opacity-100"
-            style={{ color: "var(--color-accent)" }}
-          >
-            פיתוח AR Web Labs
-          </a>
         </div>
       </div>
     </footer>

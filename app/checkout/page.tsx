@@ -21,6 +21,7 @@ function FormField({
         type={type} name={name} value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        required
         dir="rtl"
         className="w-full rounded-xl border px-4 py-3 text-base sm:text-lg text-start outline-none transition-colors"
         style={{ borderColor: "#e0e0e0", background: "#fafafa", caretColor: "#c6a87a", color: "black" }}
@@ -43,6 +44,9 @@ export default function CheckoutPage() {
 
   const set = (key: keyof typeof form) => (v: string) =>
     setForm((f) => ({ ...f, [key]: v }));
+
+  const isShippingValid = form.firstName && form.lastName && form.email && form.phone && form.address && form.city && form.zip;
+  const isPaymentValid = form.cardNumber && form.expiry && form.cvv;
 
   const handleConfirm = () => {
     clearCart();
@@ -101,7 +105,8 @@ export default function CheckoutPage() {
 
                   <button
                     onClick={() => setStep("payment")}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85"
+                    disabled={!isShippingValid}
+                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ background: "#c6a87a" }}
                   >
                     המשך לתשלום
@@ -123,7 +128,8 @@ export default function CheckoutPage() {
 
                   <button
                     onClick={handleConfirm}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85"
+                    disabled={!isPaymentValid}
+                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ background: "#c6a87a" }}
                   >
                     אשר הזמנה

@@ -10,6 +10,22 @@ export const metadata: Metadata = {
     "החנות המובילה למוצרי וייפינג פרמיום בישראל. מגוון רחב של מכשירים, נוזלים ואביזרים.",
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "XVape",
+  url: "https://xvape.co.il",
+  logo: "https://xvape.co.il/assets/logo.svg",
+  sameAs: [],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "XVape",
+  url: "https://xvape.co.il",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,6 +33,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="he" dir="rtl" className="h-full">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-black text-white antialiased font-sans">
         <CartProvider>
           <AgeVerificationPopup>
