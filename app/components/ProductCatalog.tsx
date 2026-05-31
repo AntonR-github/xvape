@@ -6,7 +6,19 @@ export default async function ProductCatalog() {
   let displayProducts = mockProducts;
   try {
     const { products } = await getProducts(4);
-    if (products.length > 0) displayProducts = products;
+    if (products.length > 0) {
+      // Merge static features/badge from mock data (Medusa doesn't store these)
+      displayProducts = products.map((p) => {
+        const mock = mockProducts.find((m) => m.handle === p.handle || m.id === p.id);
+        if (!mock) return p;
+        return {
+          ...p,
+          badge:        p.badge        || mock.badge,
+          features:     p.features?.length     ? p.features     : mock.features,
+          cardFeatures: p.cardFeatures?.length ? p.cardFeatures : mock.cardFeatures,
+        };
+      });
+    }
   } catch {
     // backend unreachable — keep mock data
   }

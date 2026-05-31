@@ -60,6 +60,7 @@ export interface StoreProduct {
   images: string[];
   badge: string;
   features: string[];
+  cardFeatures?: string[];
   variants: ProductVariant[];
   options?: { id: string; title: string; value: string }[];
 }

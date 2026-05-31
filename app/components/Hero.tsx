@@ -1,109 +1,115 @@
 import Link from "next/link";
 import Image from "next/image";
 
-function Sparkle({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z" />
-    </svg>
-  );
-}
-
 export default function Hero() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative bg-black overflow-hidden">
-        <div className="site-container px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] items-start mt-10">
-            {/* Text */}
-            <div className="order-2 lg:order-1 flex flex-col items-start text-start justify-start pt-4 pb-10 lg:pt-2 lg:pb-24">
-              <h1 className="title-h1 mb-5 text-4xl sm:text-5xl lg:text-[clamp(2.25rem,6vw,4.5rem)]">
-                הפתרון המתקדם
-                <br />
-                לבערה הישירה
-              </h1>
-              <p className="mb-10 max-w-none lg:whitespace-nowrap subtitle">
-                טכנולוגיית אידוי חכמה שמוציאה יותר בכל שאיפה
-              </p>
-              <div className="flex items-center gap-3 flex-nowrap justify-start w-full">
-                <Link
-                  href="/shop"
-                  className="inline-flex items-center gap-3 px-5 py-3 sm:px-8 sm:py-4 rounded-full font-regular text-black text-base sm:text-xl transition-opacity hover:opacity-85"
-                  style={{ background: "var(--color-accent-gradient)" }}
-                >
-                  כנס לחנות
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="w-5 h-5 sm:w-6 sm:h-6"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Link>
-                <Link
-                  href="/compare"
-                  className="inline-flex items-center px-5 py-3 sm:px-8 sm:py-4 rounded-full font-regular text-base sm:text-xl transition-opacity hover:opacity-85"
-                  style={{
-                    border: "2px solid transparent",
-                    background:
-                      "linear-gradient(#000, #000) padding-box, var(--color-accent-gradient) border-box",
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "var(--color-accent-gradient)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    השוואת מודלים
-                  </span>
-                </Link>
-              </div>
-            </div>
+      <section className="relative w-full min-h-[65vh] sm:min-h-[75vh] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-black">
 
-            {/* Image */}
-            <div className="order-1 lg:order-2 relative flex items-end justify-center overflow-hidden">
-              <Sparkle className="absolute top-20 end-8 w-5 h-5 text-white opacity-60" />
-              <Sparkle className="absolute top-1/3 start-6 w-3.5 h-3.5 text-white opacity-35" />
-              <Sparkle className="absolute bottom-1/3 end-16 w-2.5 h-2.5 text-white opacity-25" />
-              <Sparkle className="absolute bottom-16 start-1/3 w-4 h-4 text-white opacity-40" />
+        {/* Background image */}
+        <Image
+          src="/assets/img/herobg2.jpg"
+          alt="hero background"
+          fill
+          priority
+          quality={100}
+          className="object-cover sm:object-contain object-center select-none pointer-events-none"
+        />
 
-              <Image
-                src="/assets/img/hprod.jpg"
-                alt="מכשיר וייפינג"
-                width={800}
-                height={1000}
-                className="relative z-10 drop-shadow-2xl object-contain object-bottom product-image
-                  w-[70vw]      max-h-[80vw]
-                  sm:w-[55vw]   sm:max-h-[65vw]
-                  md:w-[45vw]   md:max-h-[55vw]
-                  lg:w-[420px]  lg:max-h-[72vh]
-                  xl:w-[500px]  xl:max-h-[78vh]
-                  2xl:w-[580px] 2xl:max-h-[84vh]"
-                priority
-              />
-            </div>
+        {/* Dark overlay */}
+        <div
+          className="absolute inset-0 z-[1]"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.78) 100%)",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center gap-4 sm:gap-6 px-4 sm:px-6 py-10 w-full max-w-4xl mx-auto">
+
+          {/* Logo */}
+          <Image
+            src="/assets/logo2.svg"
+            alt="XVAPE"
+            width={480}
+            height={220}
+            className="w-44 sm:w-72 lg:w-[420px] h-auto mb-1 sm:mb-2 drop-shadow-2xl"
+            priority
+          />
+
+          {/* Heading */}
+          <h1
+            className="font-semibold text-white tracking-wide"
+            style={{
+              fontSize: "clamp(1.4rem, 5vw, 3rem)",
+              lineHeight: 1.2,
+              letterSpacing: "0.04em",
+            }}
+          >
+            מכשירי אידוי מתקדמים
+          </h1>
+
+          {/* Subtitle */}
+          <p
+            className="font-semibold sm:whitespace-nowrap text-center px-2"
+            style={{
+              fontSize: "clamp(1.2rem, 3vw, 2.6rem)",
+              lineHeight: 1.6,
+              color: "#c6a87a",
+              letterSpacing: "0.02em",
+              maxWidth: "90vw",
+            }}
+          >
+            וופורייזרים במגוון דגמים, בעיצוב חדשני ובקרת חום מדויקת
+          </p>
+
+          {/* Buttons */}
+          <div className="flex flex-row items-center justify-center gap-3 mt-2 sm:mt-4">
+
+            {/* Primary — כנס לחנות */}
+            <Link
+              href="/shop"
+              className="inline-flex items-center justify-center gap-3 px-6 sm:px-10 py-3 sm:py-4 text-black text-sm sm:text-base font-regular transition-all hover:bg-gray-100"
+              style={{
+                border: "1.5px solid rgba(255,255,255,0.75)",
+                background: "#ffffff",
+                minWidth: "150px",
+              }}
+            >
+              כנס לחנות
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0">
+                <path
+                  fillRule="evenodd"
+                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </Link>
+
+            {/* Secondary — השוואת מודלים */}
+            <Link
+              href="/compare"
+              className="inline-flex items-center justify-center px-6 sm:px-10 py-3 sm:py-4 text-white text-sm sm:text-base font-regular transition-all hover:bg-white/10"
+              style={{
+                border: "1.5px solid rgba(255,255,255,0.75)",
+                background: "rgba(0,0,0,0.15)",
+                backdropFilter: "blur(4px)",
+                boxShadow: "0 0 12px rgba(255,255,255,0.15), inset 0 0 8px rgba(255,255,255,0.04)",
+                minWidth: "150px",
+              }}
+            >
+              השוואת מודלים
+            </Link>
           </div>
+
         </div>
       </section>
 
       {/* ── Tech section ── */}
-      <section
-        className="py-10 mb-16"
-      >
-        <div className="site-container  px-6 lg:px-12">
+      <section className="py-10 mb-16">
+        <div className="site-container px-6 lg:px-12">
           <h2 className="title-h2 sm:text-4xl text-start mb-4">
             הטכנולוגיה שמשנה את הצריכה
           </h2>
@@ -157,10 +163,10 @@ export default function Hero() {
               </div>
               <h3 className="title-h3 mb-4">סוגי אידוי</h3>
               <p className="paragraph mb-4">
-                הולכת חום - המכשיר מחמם את הצמח ישירות דרך מגע. חימום מהיר,
-                פשוט לשימוש. +Lanza · Aria קונבינציה - אוויר חם עובר דרך הצמח
-                ומחמם אותו בצורה אחידה. תוצאה עמוקה יותר, טעם מלא יותר. Fog Pro
-                · Roffu
+                הולכת חום - המכשיר מחמם את הצמח ישירות דרך מגע. חימום מהיר, פשוט
+                לשימוש. +Lanza · Aria קונביקציה - אוויר חם עובר דרך הצמח ומחמם
+                אותו בצורה אחידה. תוצאה עמוקה יותר, טעם מלא יותר. Fog Pro ·
+                Roffu
               </p>
             </div>
           </div>

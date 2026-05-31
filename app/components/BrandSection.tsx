@@ -13,30 +13,38 @@ function Sparkle({ className }: { className?: string }) {
   );
 }
 
-const stores = [
+const benefits = [
   {
-    id: "online",
-    name: "באתר",
-    details: "משלוח עד הבית\nתוך 3-5 ימי עסקים",
-    icon: "/assets/icn/truck.png",
+    id: "quality",
+    title: "איכות ללא פשרות",
+    subtitle: "מוצרים בסטנדרט גבוה ביותר",
+    icon: (
+      <Image src="/assets/icn/checkmark.png" alt="checkmark" width={52} height={52} className="w-13 h-13" />
+    ),
   },
   {
-    id: "store-1",
-    name: "חנות",
-    details: "פרטי החנות כתובת\nטלפון ופרטי קשר",
-    icon: "/assets/icn/store.png",
+    id: "discreet",
+    title: "משלוח דיסקרטי",
+    subtitle: "אריזה דיסקרטית ושירות מהיר",
+    icon: (
+   <Image src="/assets/icn/package.png" alt="checkmark" width={52} height={52} className="w-13 h-13" />
+    ),
   },
   {
-    id: "store-2",
-    name: "חנות",
-    details: "פרטי החנות כתובת\nטלפון ופרטי קשר",
-    icon: "/assets/icn/store.png",
+    id: "shipping",
+    title: "משלוח חינם",
+    subtitle: "בקנייה מעל ₪199 לכל הארץ",
+    icon: (
+   <Image src="/assets/icn/delivery.png" alt="checkmark" width={52} height={52} className="w-13 h-13" />
+    ),
   },
   {
-    id: "store-3",
-    name: "חנות",
-    details: "פרטי החנות כתובת\nטלפון ופרטי קשר",
-    icon: "/assets/icn/store.png",
+    id: "warranty",
+    title: "אחריות מלאה",
+    subtitle: "שביעות רצון מלאה או החזר כספי",
+    icon: (
+    <Image src="/assets/icn/warranty.png" alt="checkmark" width={52} height={52} className="w-13 h-13" />
+    ),
   },
 ];
 
@@ -48,7 +56,6 @@ export default function BrandSection() {
 
         <div
           className="absolute inset-x-0 top-16 bottom-16"
-          style={{ background: "var(--color-surface)" }}
         />
 
         <div className="site-container px-4 sm:px-6 lg:px-12 relative z-10">
@@ -87,7 +94,7 @@ export default function BrandSection() {
               className="
                 relative rounded-2xl overflow-hidden order-last
                 my-0 lg:-my-16
-                min-h-[260px] sm:min-h-[380px] lg:min-h-[540px]
+                min-h-[420px] sm:min-h-[600px] lg:min-h-[820px]
               "
             >
               <Sparkle className="absolute top-12 inset-e-12 w-4 h-4 text-white opacity-50 z-10" />
@@ -97,11 +104,10 @@ export default function BrandSection() {
               {/* Warm glow behind the product */}
               <div
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-72 h-20 blur-3xl rounded-full z-0"
-                style={{ background: "rgba(198,168,122,0.15)" }}
               />
 
               <Image
-                src="/assets/img/brand-image.jpg"
+                src="/assets/img/lanzah.jpg"
                 alt="XVAPE brand"
                 fill
                 className="object-contain product-image"
@@ -112,56 +118,27 @@ export default function BrandSection() {
         </div>
       </section>
 
-      {/* ── Store locator ── */}
-      <section
-        className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-12"
-        style={{ background: "#0d0d0d" }}
-      >
+      {/* ── Benefits bar ── */}
+      <section className="bg-white py-8 sm:py-10 px-4 sm:px-6 lg:px-12">
         <div className="site-container">
-
-          {/* Title — responsive type scale, fixed invalid `font-regular` → font-normal */}
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white text-center mb-8 sm:mb-10 lg:mb-12">
-            היכן ניתן להשיג
-          </h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {stores.map((store) => (
-              <div
-                key={store.id}
-                className="
-                  rounded-2xl flex flex-col items-center text-center gap-3 border
-                  px-4 py-6 sm:px-5 sm:py-7 lg:px-6 lg:py-8
-                  transition-colors hover:border-white/15
-                "
-                style={{
-                  background: "#1a1a1a",
-                  borderColor: "rgba(255,255,255,0.07)",
-                }}
-              >
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-x-reverse divide-gray-200">
+            {benefits.map((b) => (
+              <div key={b.id} className="flex flex-col items-center text-center gap-2 px-4 sm:px-6 py-4">
                 {/* Icon */}
-                <div className="h-12 sm:h-14 flex items-center justify-center">
-                  <Image
-                    src={store.icon}
-                    alt={store.name}
-                    width={64}
-                    height={64}
-                    className="h-10 sm:h-12 w-auto icon-accent"
-                  />
+                <div className="mb-1 text-black">
+                  {b.icon}
                 </div>
-
-                {/* Store name */}
-                <span className="font-bold text-white text-xl sm:text-2xl">
-                  {store.name}
+                {/* Title */}
+                <span className="font-bold text-black text-lg sm:text-xl leading-tight">
+                  {b.title}
                 </span>
-
-                {/* Details */}
-                <p className="text-base sm:text-lg leading-relaxed whitespace-pre-line paragraph">
-                  {store.details}
+                {/* Subtitle */}
+                <p className="text-base sm:text-lg text-black">
+                  {b.subtitle}
                 </p>
               </div>
             ))}
           </div>
-
         </div>
       </section>
     </>

@@ -23,10 +23,10 @@ export default function CTABanner() {
           - Mobile:  single column, image below text, no fixed min-height
           - Desktop: two columns, items vertically centred, 600px min-height
         */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center lg:items-start lg:min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center lg:items-start lg:min-h-[780px]">
 
           {/* ── Text ── first in DOM = right side in RTL ── */}
-          <div className="flex flex-col items-start text-start pt-10 pb-6 lg:py-16 gap-4 order-first">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-start pt-10 pb-6 lg:py-16 gap-4 order-first mt-16">
             <h2
               className="font-normal text-white leading-tight"
               style={{ fontSize: "clamp(2rem, 5.5vw, 3.75rem)" }}
@@ -40,8 +40,8 @@ export default function CTABanner() {
 
             <Link
               href="/shop"
-              className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-normal text-black text-lg sm:text-xl transition-opacity hover:opacity-85 mt-2"
-              style={{ background: "var(--color-accent-gradient)" }}
+              className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 font-normal text-black text-lg sm:text-xl transition-opacity hover:opacity-85 mt-2"
+              style={{ background: "#ffffff" }}
             >
               כנס לחנות
               {/* Arrow points toward inline-start (right in RTL = "forward" in RTL reading) */}
@@ -62,7 +62,7 @@ export default function CTABanner() {
             - sm:      420px — comfortable on large phones / small tablets
             - lg:      600px — matches the original design intent on desktop
           */}
-          <div className="relative flex items-center justify-center h-[300px] sm:h-[420px] lg:h-[600px]">
+          <div className="relative flex items-center justify-center h-[400px] sm:h-[560px] lg:h-[780px]">
 
             {/* Sparkles — hidden on mobile to reduce clutter */}
             <Sparkle className="hidden sm:block absolute top-10 inset-s-8 w-4 h-4 text-white opacity-55" />
@@ -86,7 +86,7 @@ export default function CTABanner() {
             <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black to-transparent z-10 lg:hidden" />
 
             <Image
-              src="/assets/img/cta-image.jpg"
+              src="/assets/img/cta.jpg"
               alt="מוצר"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

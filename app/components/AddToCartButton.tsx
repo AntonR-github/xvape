@@ -12,8 +12,28 @@ interface Props {
   material?: string;
 }
 
-export default function AddToCartButton({ id, name, price, variantId, image, description, material }: Props) {
+interface PropsWithVariant extends Props {
+  fullWidth?: boolean;
+}
+
+export default function AddToCartButton({ id, name, price, variantId, image, description, material, fullWidth }: PropsWithVariant) {
   const { addItem } = useCart();
+
+  if (fullWidth) {
+    return (
+      <button
+        className="w-full py-3 text-white text-base font-medium transition-opacity hover:opacity-80 rounded-2xl"
+        style={{ background: "#1a1a1a", margin: "0 12px 12px", width: "calc(100% - 24px)" }}
+        aria-label={`הוסף ${name} לעגלה`}
+        onClick={(e) => {
+          e.preventDefault();
+          addItem({ id, name, price, variantId, image, description, material });
+        }}
+      >
+        הוסף לעגלה
+      </button>
+    );
+  }
 
   return (
     <button

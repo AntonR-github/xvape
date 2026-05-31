@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
@@ -16,41 +15,83 @@ function FormField({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm sm:text-lg font-semibold text-start" style={{ color: "#555555" }}>{label}</label>
+      <label className="text-sm sm:text-xs font-semibold text-start" style={{ color: "#555555" }}>{label}</label>
       <input
         type={type} name={name} value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required
         dir="rtl"
-        className="w-full rounded-xl border px-4 py-3 text-base sm:text-lg text-start outline-none transition-colors"
+        className="w-full rounded-xl border px-4 py-3 text-base sm:text-sm text-start outline-none transition-colors"
         style={{ borderColor: "#e0e0e0", background: "#fafafa", caretColor: "#c6a87a", color: "black" }}
       />
     </div>
   );
 }
 
+function LockIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+    </svg>
+  );
+}
+
 export default function CheckoutPage() {
-  const router = useRouter();
-  const { items, total, clearCart } = useCart();
+  const { items, total } = useCart();
   const shipping = total >= 199 ? 0 : 29;
 
   const [step, setStep] = useState<Step>("shipping");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [form, setForm] = useState({
     firstName: "", lastName: "", email: "", phone: "",
     address: "", city: "", zip: "",
-    cardNumber: "", expiry: "", cvv: "",
   });
 
   const set = (key: keyof typeof form) => (v: string) =>
     setForm((f) => ({ ...f, [key]: v }));
 
-  const isShippingValid = form.firstName && form.lastName && form.email && form.phone && form.address && form.city && form.zip;
-  const isPaymentValid = form.cardNumber && form.expiry && form.cvv;
+  const isShippingValid =
+    form.firstName && form.lastName && form.email &&
+    form.phone && form.address && form.city && form.zip;
 
-  const handleConfirm = () => {
-    clearCart();
-    router.push("/confirmation");
+  const handlePay = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const orderId = `XV-${Date.now()}`;
+      const res = await fetch("/api/hyp-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: total + shipping,
+          orderId,
+          customer: {
+            firstName: form.firstName,
+            lastName:  form.lastName,
+            email:     form.email,
+            phone:     form.phone,
+            address:   form.address,
+            city:      form.city,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error ?? "שגיאה בחיבור לשער התשלומים");
+        setLoading(false);
+        return;
+      }
+
+      // Redirect to Hyp Pay hosted payment page
+      window.location.href = data.paymentUrl;
+    } catch {
+      setError("שגיאה בחיבור לשער התשלומים. אנא נסה שוב.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,7 +103,7 @@ export default function CheckoutPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
 
-            {/* Form — order-2 on mobile so summary shows first */}
+            {/* Form */}
             <div className="lg:col-span-2 flex flex-col gap-6 order-2 lg:order-1">
 
               {/* Step tabs */}
@@ -70,33 +111,31 @@ export default function CheckoutPage() {
                 {(["shipping", "payment"] as Step[]).map((s) => (
                   <button
                     key={s}
-                    onClick={() => setStep(s)}
-                    className="px-5 py-2 rounded-full text-base sm:text-lg font-semibold border transition-colors"
+                    onClick={() => s === "shipping" && setStep("shipping")}
+                    className="px-5 py-2 rounded-full text-base sm:text-sm font-semibold border transition-colors"
                     style={
                       step === s
                         ? { background: "#c6a87a", borderColor: "#c6a87a", color: "#000" }
                         : { borderColor: "#e0e0e0", color: "#777777" }
                     }
                   >
-                    {s === "shipping" ? "פרטי משלוח" : "פרטי תשלום"}
+                    {s === "shipping" ? "פרטי משלוח" : "תשלום"}
                   </button>
                 ))}
               </div>
 
+              {/* Step 1: Shipping */}
               {step === "shipping" && (
-                <div
-                  className="rounded-2xl border p-5 sm:p-7 flex flex-col gap-5"
-                  style={{ borderColor: "#eeeeee" }}
-                >
-                  <h2 className="font-black text-black text-start text-xl sm:text-xl">פרטים אישיים</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-start">
+                <div className="rounded-2xl border p-5 sm:p-7 flex flex-col gap-5" style={{ borderColor: "#eeeeee" }}>
+                  <h2 className="font-black text-black text-start text-xl sm:text-lg">פרטים אישיים</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField label="שם פרטי" name="firstName" value={form.firstName} onChange={set("firstName")} />
                     <FormField label="שם משפחה" name="lastName" value={form.lastName} onChange={set("lastName")} />
                   </div>
                   <FormField label="אימייל" name="email" type="email" value={form.email} onChange={set("email")} />
                   <FormField label="טלפון" name="phone" type="tel" value={form.phone} onChange={set("phone")} />
 
-                  <h2 className="font-black text-black text-start text-xl sm:text-xl pt-2">כתובת למשלוח</h2>
+                  <h2 className="font-black text-black text-start text-xl sm:text-lg pt-2">כתובת למשלוח</h2>
                   <FormField label="כתובת" name="address" value={form.address} onChange={set("address")} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField label="עיר" name="city" value={form.city} onChange={set("city")} />
@@ -106,7 +145,7 @@ export default function CheckoutPage() {
                   <button
                     onClick={() => setStep("payment")}
                     disabled={!isShippingValid}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-sm font-bold text-black mt-2 transition-opacity hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed"
                     style={{ background: "#c6a87a" }}
                   >
                     המשך לתשלום
@@ -114,39 +153,76 @@ export default function CheckoutPage() {
                 </div>
               )}
 
+              {/* Step 2: Pay via Hyp */}
               {step === "payment" && (
-                <div
-                  className="rounded-2xl border p-5 sm:p-7 flex flex-col gap-5"
-                  style={{ borderColor: "#eeeeee" }}
-                >
-                  <h2 className="font-black text-black text-start text-xl sm:text-lg">פרטי תשלום</h2>
-                  <FormField label="מספר כרטיס" name="cardNumber" value={form.cardNumber} onChange={set("cardNumber")} placeholder="•••• •••• •••• ••••" />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormField label="תוקף" name="expiry" value={form.expiry} onChange={set("expiry")} placeholder="MM/YY" />
-                    <FormField label="CVV" name="cvv" value={form.cvv} onChange={set("cvv")} placeholder="•••" />
+                <div className="rounded-2xl border p-5 sm:p-7 flex flex-col gap-6" style={{ borderColor: "#eeeeee" }}>
+                  <h2 className="font-black text-black text-start text-xl sm:text-lg">תשלום מאובטח</h2>
+
+                  {/* Order recap */}
+                  <div className="rounded-xl p-4 flex flex-col gap-2 text-sm" style={{ background: "#f7f7f7" }}>
+                    <div className="flex justify-between">
+                      <span style={{ color: "#777" }}>שם</span>
+                      <span className="font-medium text-black">{form.firstName} {form.lastName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span style={{ color: "#777" }}>אימייל</span>
+                      <span className="font-medium text-black">{form.email}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span style={{ color: "#777" }}>כתובת</span>
+                      <span className="font-medium text-black">{form.address}, {form.city}</span>
+                    </div>
+                    <button
+                      onClick={() => setStep("shipping")}
+                      className="self-start text-xs mt-1 underline transition-opacity hover:opacity-60"
+                      style={{ color: "#c6a87a" }}
+                    >
+                      ערוך פרטים
+                    </button>
                   </div>
 
-                  <button
-                    onClick={handleConfirm}
-                    disabled={!isPaymentValid}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ background: "#c6a87a" }}
-                  >
-                    אשר הזמנה
-                  </button>
+                  {/* Hyp Pay CTA */}
+                  <div className="flex flex-col gap-3">
+                    {error && (
+                      <p className="text-sm text-red-500 text-start">{error}</p>
+                    )}
+                    <button
+                      onClick={handlePay}
+                      disabled={loading}
+                      className="w-full py-4 rounded-full font-bold text-base sm:text-sm text-black flex items-center justify-center gap-2 transition-opacity hover:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
+                      style={{ background: "#c6a87a" }}
+                    >
+                      {loading ? (
+                        <>
+                          <span className="w-4 h-4 rounded-full border-2 border-black/30 border-t-black animate-spin" />
+                          מעביר לתשלום...
+                        </>
+                      ) : (
+                        <>
+                          <LockIcon />
+                          שלם עכשיו — ₪{total + shipping}
+                        </>
+                      )}
+                    </button>
+
+                    {/* Security note */}
+                    <p className="text-xs text-center" style={{ color: "#aaa" }}>
+                      התשלום מאובטח ומעובד על ידי Hyp Pay. פרטי הכרטיס אינם עוברים דרך האתר שלנו.
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Order summary — order-1 on mobile so it shows above the form */}
+            {/* Order summary */}
             <div
               className="rounded-2xl border p-5 sm:p-6 flex flex-col gap-4 h-fit order-1 lg:order-2"
               style={{ background: "#f9f9f9", borderColor: "#eeeeee" }}
             >
-              <h2 className="font-black text-black text-xl sm:text-xl text-start">סיכום הזמנה</h2>
+              <h2 className="font-black text-black text-xl sm:text-lg text-start">סיכום הזמנה</h2>
 
               {items.length > 0 && (
-                <div className="flex flex-col gap-2 text-base sm:text-lg border-b pb-4" style={{ borderColor: "#eeeeee" }}>
+                <div className="flex flex-col gap-2 text-base sm:text-sm border-b pb-4" style={{ borderColor: "#eeeeee" }}>
                   {items.map((item) => (
                     <div key={item.id} className="flex justify-between gap-2">
                       <span className="shrink-0" style={{ color: "#777" }}>× {item.qty}</span>
@@ -156,7 +232,7 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className="flex flex-col gap-2 text-base sm:text-lg">
+              <div className="flex flex-col gap-2 text-base sm:text-sm">
                 <div className="flex justify-between">
                   <span style={{ color: "#777777" }}>סכום ביניים</span>
                   <span className="font-semibold text-black">₪{total}</span>

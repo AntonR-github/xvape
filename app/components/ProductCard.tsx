@@ -21,6 +21,7 @@ export const products: Product[] = [
     images: [],
     description: "המכשיר שמשנה את חוקי המשחק",
     features: ["₪299" ,"חום", "תפרחת", "1000mAh", "נורית חיווי", "שנה אחת"],
+    cardFeatures: ["חום", "תפרחת", "1000mAh", "נורית חיווי"],
     variants: [],
     options: [{ id: "opt_badge", title: "Attribute", value: "Best Value" }],
   },
@@ -36,6 +37,7 @@ export const products: Product[] = [
     images: [],
     description: "ביצועי פרמיום בהישג יד",
     features: ["₪499" ,"הולכת חום", "תפרחת + מיצויים", "2600mAh", "מסך LED", "שנה אחת"],
+    cardFeatures: ["הולכת חום", "תפרחת + מיצויים", "2600mAh", "מסך LED"],
     variants: [],
     options: [{ id: "opt_badge", title: "Attribute", value: "Most Popular" }],
   },
@@ -51,6 +53,7 @@ export const products: Product[] = [
     images: [],
     description: "הד ליון חזק בביצועים. מדויק בטעם.",
     features: ["₪549" ,"קונבקציה (Convection)", "תפרחת", "3200mAh נשלפת", "OLED", "שנה אחת"],
+    cardFeatures: ["קונבקציה (Convection)", "תפרחת", "3200mAh נשלפת", "OLED"],
     variants: [],
     options: [{ id: "opt_badge", title: "Attribute", value: "Most Popular" }],
   },
@@ -66,6 +69,7 @@ export const products: Product[] = [
     images: [],
     description: "פסגת האידוי. טכנולוגיית חיסום חכמה.",
     features: ["₪649" ,"קונבקציה (Convection)", "שולחני", "3200mAh נשלפת", "OLED צבעוני", "שנה אחת"],
+    cardFeatures: ["קונבקציה (Convection)", "שולחני", "3200mAh נשלפת", "OLED צבעוני"],
     variants: [],
     options: [{ id: "opt_badge", title: "Attribute", value: "Most Popular" }],
   },
@@ -122,6 +126,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         )}
 
+
         {/* Variant colors */}
         {product.variants.length > 1 && (
           <div className="flex flex-wrap gap-1.5 mt-1">
@@ -138,23 +143,22 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
 
         {/* Price */}
-        <div className="flex items-center justify-between mt-auto pt-3">
-          <span className="text-4xl font-normal text-black">₪{product.price}</span>
+        <div className="mt-auto pt-3 text-center">
+          <span className="text-3xl font-normal text-black">₪{product.price}</span>
         </div>
       </Link>
 
-      {/* Add button */}
-      <div className="absolute bottom-5 inset-e-5">
-        <AddToCartButton
-          id={product.variantId || product.id}
-          name={product.name}
-          price={product.price}
-          variantId={product.variantId}
-          image={product.thumbnail ?? product.images?.[0] ?? undefined}
-          description={product.description}
-          material={product.material}
-        />
-      </div>
+      {/* Add to cart button */}
+      <AddToCartButton
+        id={product.variantId || product.id}
+        name={product.name}
+        price={product.price}
+        variantId={product.variantId}
+        image={product.thumbnail ?? product.images?.[0] ?? undefined}
+        description={product.description}
+        material={product.material}
+        fullWidth
+      />
     </div>
   );
 }

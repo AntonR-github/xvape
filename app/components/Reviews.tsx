@@ -98,10 +98,10 @@ export default function Reviews() {
   }
 
   return (
-    <section className="bg-white py-16 sm:py-20 overflow-hidden">
+    <section className="bg-black py-16 sm:py-20 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col items-center text-center gap-3 mb-10 sm:mb-14 px-6">
-        <h2 className="title-h2-black">מה הלקוחות שלנו אומרים</h2>
+        <h2 className="title-h2">מה הלקוחות שלנו אומרים</h2>
         <Stars />
       </div>
 
@@ -139,18 +139,18 @@ export default function Reviews() {
               <div
                 className="flex flex-col gap-5 text-center items-center"
                 style={{
-                  background: "#f7f7f7",
+                  background: "#1a1a1a",
                   borderRadius: "20px",
                   padding: "32px 24px",
                   direction: "rtl",
                 }}
               >
                 <Stars count={review.stars} />
-                <p className="text-base sm:text-lg leading-relaxed font-medium" style={{ color: "#333" }}>
+                <p className="text-base sm:text-lg leading-relaxed font-medium" style={{ color: "#cccccc" }}>
                   &ldquo;{review.quote}&rdquo;
                 </p>
                 <div className="flex flex-col gap-1">
-                  <span className="font-bold text-base text-black">{review.reviewer}</span>
+                  <span className="font-bold text-base text-white">{review.reviewer}</span>
                   <a
                     href={review.href}
                     className="text-sm transition-opacity hover:opacity-70"
@@ -175,7 +175,7 @@ export default function Reviews() {
             style={{
               width: i === active ? "24px" : "8px",
               height: "8px",
-              background: i === active ? "#c6a87a" : "#d0d0d0",
+              background: i === active ? "#c6a87a" : "#444444",
               transition: "all 0.3s ease",
             }}
             aria-label={`עבור לביקורת ${i + 1}`}

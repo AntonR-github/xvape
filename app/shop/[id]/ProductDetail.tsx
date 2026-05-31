@@ -6,14 +6,6 @@ import { useRouter } from "next/navigation";
 import type { StoreProduct as Product } from "../../lib/medusa";
 import { useCart } from "../../context/CartContext";
 
-function CheckIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 shrink-0">
-      <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clipRule="evenodd" />
-    </svg>
-  );
-}
-
 const FALLBACK_IMG = "/assets/img/product-test-img.jpeg";
 
 export default function ProductDetail({ product }: { product: Product }) {
@@ -24,7 +16,11 @@ export default function ProductDetail({ product }: { product: Product }) {
   const router = useRouter();
 
   const hasVariants = product.variants.length > 1;
-  const activeVariant = product.variants[selectedVariantIdx] ?? { id: product.variantId, title: "", price: product.price };
+  const activeVariant = product.variants[selectedVariantIdx] ?? {
+    id: product.variantId,
+    title: "",
+    price: product.price,
+  };
   const activePrice = activeVariant.price || product.price;
   const activeVariantId = activeVariant.id || product.variantId;
 
@@ -32,21 +28,23 @@ export default function ProductDetail({ product }: { product: Product }) {
   const allImages = product.images?.length
     ? product.images
     : product.thumbnail
-    ? [product.thumbnail]
-    : [FALLBACK_IMG];
+      ? [product.thumbnail]
+      : [FALLBACK_IMG];
   const activeImg = allImages[selectedThumb] ?? FALLBACK_IMG;
+  const detailFeatures =
+    (product.cardFeatures?.length ? product.cardFeatures : product.features) ??
+    [];
 
   return (
     <section className="py-16 px-6 lg:px-12 bg-white">
       <div className="site-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-
           {/* ── Image gallery — first in DOM = right side in RTL ── */}
           <div className="flex flex-col gap-4">
             {/* Main image */}
             <div
               className="rounded-3xl overflow-hidden flex items-center justify-center"
-              style={{ aspectRatio: "1 / 1", maxHeight: "460px" }}
+              style={{ aspectRatio: "1 / 1", maxHeight: "650px" }}
             >
               <Image
                 src={activeImg}
@@ -87,7 +85,6 @@ export default function ProductDetail({ product }: { product: Product }) {
 
           {/* ── Product info — second in DOM = left side in RTL ── */}
           <div className="flex flex-col items-start text-start gap-2">
-
             {/* Badge */}
             <span
               className="text-sm font-semibold text-white px-4 py-1.5 rounded-full"
@@ -138,8 +135,12 @@ export default function ProductDetail({ product }: { product: Product }) {
                       onClick={() => setSelectedVariantIdx(idx)}
                       className="px-4 py-2 rounded-full text-sm font-semibold border-2 transition-colors"
                       style={{
-                        borderColor: idx === selectedVariantIdx ? "#c6a87a" : "#d0d0d0",
-                        background: idx === selectedVariantIdx ? "#c6a87a" : "transparent",
+                        borderColor:
+                          idx === selectedVariantIdx ? "#c6a87a" : "#d0d0d0",
+                        background:
+                          idx === selectedVariantIdx
+                            ? "#c6a87a"
+                            : "transparent",
                         color: idx === selectedVariantIdx ? "#000" : "#555",
                       }}
                     >
@@ -151,16 +152,67 @@ export default function ProductDetail({ product }: { product: Product }) {
             )}
 
             {/* Feature list */}
-            <ul className="flex flex-col gap-3 w-full mt-6">
-              {product.features.map((f) => (
-                <li key={f} className="flex items-center justify-start gap-2 text-xl font-regular text-black tracking-wider">
-                   <span style={{ color: "#c6a87a" }}>
-                    <CheckIcon />
-                  </span>
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
+            {detailFeatures.length > 0 && (
+              <ul
+                style={{
+                  marginTop: "1.5rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  width: "100%",
+                  listStyle: "none",
+                  padding: 0,
+                }}
+              >
+                {detailFeatures.map((f) => (
+                  <li
+                    key={f}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                        background: "#c6a87a",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="white"
+                        width="12"
+                        height="12"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.704 5.29a1 1 0 0 1 0 1.415l-7.2 7.2a1 1 0 0 1-1.414 0l-3.2-3.2a1 1 0 1 1 1.414-1.414l2.493 2.492 6.493-6.492a1 1 0 0 1 1.414 0Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "1.05rem",
+                        color: "#545454",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {f}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {/* Quantity */}
             <div className="flex flex-col items-start gap-2 w-full mt-10 mb-6">
@@ -170,54 +222,69 @@ export default function ProductDetail({ product }: { product: Product }) {
                   onClick={() => setQty((q) => q + 1)}
                   className="w-11 h-11 rounded-xl border flex items-center justify-center text-lg font-semibold text-black hover:opacity-60 transition-opacity"
                   style={{ borderColor: "#d0d0d0" }}
-                >+</button>
+                >
+                  +
+                </button>
                 <span
                   className="w-11 h-11 rounded-xl border flex items-center justify-center text-base font-semibold text-black"
                   style={{ borderColor: "#d0d0d0" }}
-                >{qty}</span>
+                >
+                  {qty}
+                </span>
                 <button
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
                   className="w-11 h-11 rounded-xl border flex items-center justify-center text-lg font-semibold text-black hover:opacity-60 transition-opacity"
                   style={{ borderColor: "#d0d0d0" }}
-                >−</button>
+                >
+                  −
+                </button>
               </div>
             </div>
 
             {/* CTA buttons */}
-            <div className="flex flex-col-2 gap-3 items-start w-full">
+            <div
+              className="flex flex-col gap-3"
+              style={{ width: "fit-content", minWidth: "260px" }}
+            >
               <button
-                className="px-8 py-4 rounded-full font-regular text-white text-lg tracking-[0.07em] bg-[#1a1a1a] border border-[#1a1a1a] transition-colors hover:bg-white hover:text-black"
-                onClick={() => addItem({
-                  id: activeVariantId,
-                  name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
-                  price: activePrice,
-                  variantId: activeVariantId,
-                  description: product.description,
-                  material: product.material,
-                }, qty)}
+                className="w-full px-8 py-4 font-regular text-white text-lg tracking-[0.07em] bg-[#1a1a1a] border border-[#1a1a1a] transition-colors hover:bg-white hover:text-black"
+                onClick={() =>
+                  addItem(
+                    {
+                      id: activeVariantId,
+                      name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
+                      price: activePrice,
+                      variantId: activeVariantId,
+                      description: product.description,
+                      material: product.material,
+                    },
+                    qty,
+                  )
+                }
               >
                 הוסף לעגלה — ₪{activePrice * qty}
               </button>
               <button
-                className="px-8 py-4 rounded-full font-regular text-lg bg-white border border-[#1a1a1a] text-[#1a1a1a] tracking-[0.07em] transition-colors hover:bg-black hover:text-white"
+                className="w-full px-8 py-4 font-regular text-lg bg-white border border-[#1a1a1a] text-[#1a1a1a] tracking-[0.07em] transition-colors hover:bg-black hover:text-white"
                 onClick={() => {
-                  addItem({
-                    id: activeVariantId,
-                    name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
-                    price: activePrice,
-                    variantId: activeVariantId,
-                    description: product.description,
-                    material: product.material,
-                  }, qty);
+                  addItem(
+                    {
+                      id: activeVariantId,
+                      name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
+                      price: activePrice,
+                      variantId: activeVariantId,
+                      description: product.description,
+                      material: product.material,
+                    },
+                    qty,
+                  );
                   router.push("/checkout");
                 }}
               >
                 קנה עכשיו
               </button>
             </div>
-
           </div>
-
         </div>
       </div>
     </section>
