@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
@@ -8,11 +9,12 @@ import { useCart } from "../context/CartContext";
 type Step = "shipping" | "payment";
 
 function FormField({
-  label, name, type = "text", value, onChange, placeholder,
+  label, name, type = "text", value, onChange, placeholder, showError,
 }: {
   label: string; name: string; type?: string;
-  value: string; onChange: (v: string) => void; placeholder?: string;
+  value: string; onChange: (v: string) => void; placeholder?: string; showError?: boolean;
 }) {
+  const invalid = showError && !value.trim();
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm sm:text-xs font-semibold text-start" style={{ color: "#555555" }}>{label}</label>
@@ -23,8 +25,14 @@ function FormField({
         required
         dir="rtl"
         className="w-full rounded-xl border px-4 py-3 text-base sm:text-sm text-start outline-none transition-colors"
-        style={{ borderColor: "#e0e0e0", background: "#fafafa", caretColor: "#c6a87a", color: "black" }}
+        style={{
+          borderColor: invalid ? "#e53e3e" : "#e0e0e0",
+          background: invalid ? "#fff5f5" : "#fafafa",
+          caretColor: "#c6a87a",
+          color: "black",
+        }}
       />
+      {invalid && <span className="text-xs text-red-500 text-start">שדה חובה</span>}
     </div>
   );
 }
@@ -44,6 +52,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<Step>("shipping");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "", lastName: "", email: "", phone: "",
@@ -54,8 +63,13 @@ export default function CheckoutPage() {
     setForm((f) => ({ ...f, [key]: v }));
 
   const isShippingValid =
-    form.firstName && form.lastName && form.email &&
-    form.phone && form.address && form.city && form.zip;
+    form.firstName.trim() && form.lastName.trim() && form.email.trim() &&
+    form.phone.trim() && form.address.trim() && form.city.trim() && form.zip.trim();
+
+  const handleContinue = () => {
+    setSubmitted(true);
+    if (isShippingValid) setStep("payment");
+  };
 
   const handlePay = async () => {
     setLoading(true);
@@ -68,14 +82,6 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           amount: total + shipping,
           orderId,
-          customer: {
-            firstName: form.firstName,
-            lastName:  form.lastName,
-            email:     form.email,
-            phone:     form.phone,
-            address:   form.address,
-            city:      form.city,
-          },
         }),
       });
 
@@ -129,23 +135,22 @@ export default function CheckoutPage() {
                 <div className="rounded-2xl border p-5 sm:p-7 flex flex-col gap-5" style={{ borderColor: "#eeeeee" }}>
                   <h2 className="font-black text-black text-start text-xl sm:text-lg">פרטים אישיים</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormField label="שם פרטי" name="firstName" value={form.firstName} onChange={set("firstName")} />
-                    <FormField label="שם משפחה" name="lastName" value={form.lastName} onChange={set("lastName")} />
+                    <FormField label="שם פרטי" name="firstName" value={form.firstName} onChange={set("firstName")} showError={submitted} />
+                    <FormField label="שם משפחה" name="lastName" value={form.lastName} onChange={set("lastName")} showError={submitted} />
                   </div>
-                  <FormField label="אימייל" name="email" type="email" value={form.email} onChange={set("email")} />
-                  <FormField label="טלפון" name="phone" type="tel" value={form.phone} onChange={set("phone")} />
+                  <FormField label="אימייל" name="email" type="email" value={form.email} onChange={set("email")} showError={submitted} />
+                  <FormField label="טלפון" name="phone" type="tel" value={form.phone} onChange={set("phone")} showError={submitted} />
 
                   <h2 className="font-black text-black text-start text-xl sm:text-lg pt-2">כתובת למשלוח</h2>
-                  <FormField label="כתובת" name="address" value={form.address} onChange={set("address")} />
+                  <FormField label="כתובת" name="address" value={form.address} onChange={set("address")} showError={submitted} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormField label="עיר" name="city" value={form.city} onChange={set("city")} />
-                    <FormField label="מיקוד" name="zip" value={form.zip} onChange={set("zip")} />
+                    <FormField label="עיר" name="city" value={form.city} onChange={set("city")} showError={submitted} />
+                    <FormField label="מיקוד" name="zip" value={form.zip} onChange={set("zip")} showError={submitted} />
                   </div>
 
                   <button
-                    onClick={() => setStep("payment")}
-                    disabled={!isShippingValid}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-sm font-bold text-black mt-2 transition-opacity hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed"
+                    onClick={handleContinue}
+                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-sm font-bold text-black mt-2 transition-opacity hover:opacity-85"
                     style={{ background: "#c6a87a" }}
                   >
                     המשך לתשלום
@@ -192,60 +197,49 @@ export default function CheckoutPage() {
                       className="w-full py-4 rounded-full font-bold text-base sm:text-sm text-black flex items-center justify-center gap-2 transition-opacity hover:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
                       style={{ background: "#c6a87a" }}
                     >
-                      {loading ? (
-                        <>
-                          <span className="w-4 h-4 rounded-full border-2 border-black/30 border-t-black animate-spin" />
-                          מעביר לתשלום...
-                        </>
-                      ) : (
-                        <>
-                          <LockIcon />
-                          שלם עכשיו — ₪{total + shipping}
-                        </>
-                      )}
+                      <LockIcon />
+                      {loading ? "מעבד..." : "לתשלום מאובטח"}
                     </button>
-
-                    {/* Security note */}
                     <p className="text-xs text-center" style={{ color: "#aaa" }}>
-                      התשלום מאובטח ומעובד על ידי Hyp Pay. פרטי הכרטיס אינם עוברים דרך האתר שלנו.
+                      התשלום מאובטח באמצעות Hyp Pay
                     </p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Order summary */}
-            <div
-              className="rounded-2xl border p-5 sm:p-6 flex flex-col gap-4 h-fit order-1 lg:order-2"
-              style={{ background: "#f9f9f9", borderColor: "#eeeeee" }}
-            >
-              <h2 className="font-black text-black text-xl sm:text-lg text-start">סיכום הזמנה</h2>
-
-              {items.length > 0 && (
-                <div className="flex flex-col gap-2 text-base sm:text-sm border-b pb-4" style={{ borderColor: "#eeeeee" }}>
+            {/* Order summary sidebar */}
+            <div className="lg:col-span-1 order-1 lg:order-2">
+              <div className="rounded-2xl border p-5 sm:p-6 flex flex-col gap-4 sticky top-24" style={{ borderColor: "#eeeeee" }}>
+                <h2 className="font-black text-black text-start text-xl sm:text-lg">סיכום הזמנה</h2>
+                <div className="flex flex-col gap-3">
                   {items.map((item) => (
-                    <div key={item.id} className="flex justify-between gap-2">
-                      <span className="shrink-0" style={{ color: "#777" }}>× {item.qty}</span>
-                      <span className="text-start text-black font-medium truncate">{item.name}</span>
+                    <div key={item.id} className="flex items-center gap-3">
+                      {item.image && (
+                        <Image src={item.image} alt={item.name} width={48} height={48} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-black truncate text-start">{item.name}</p>
+                        <p className="text-xs text-start" style={{ color: "#777" }}>× {item.qty}</p>
+                      </div>
+                      <span className="text-sm font-semibold text-black shrink-0">₪{(item.price * item.qty).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
-              )}
-
-              <div className="flex flex-col gap-2 text-base sm:text-sm">
-                <div className="flex justify-between">
-                  <span style={{ color: "#777777" }}>סכום ביניים</span>
-                  <span className="font-semibold text-black">₪{total}</span>
+                <div className="border-t pt-4 flex flex-col gap-2" style={{ borderColor: "#eeeeee" }}>
+                  <div className="flex justify-between text-sm">
+                    <span style={{ color: "#777" }}>סכום ביניים</span>
+                    <span className="text-black">₪{total.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span style={{ color: "#777" }}>משלוח</span>
+                    <span className="text-black">{shipping === 0 ? "חינם" : `₪${shipping}`}</span>
+                  </div>
+                  <div className="flex justify-between text-base font-black text-black mt-1">
+                    <span>סה״כ</span>
+                    <span>₪{(total + shipping).toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span style={{ color: "#777777" }}>משלוח</span>
-                  <span className="font-semibold text-black">{shipping === 0 ? "חינם" : `₪${shipping}`}</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between font-black text-black text-xl sm:text-lg border-t pt-4" style={{ borderColor: "#eeeeee" }}>
-                <span>סה״כ</span>
-                <span>₪{total + shipping}</span>
               </div>
             </div>
 

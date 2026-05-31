@@ -1,16 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export interface HypCheckoutBody {
-  amount: number;        // total in ILS
-  orderId: string;       // your internal order ID
-  customer: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address: string;
-    city: string;
-  };
+  amount: number;   // total in ILS
+  orderId: string;  // your internal order ID
 }
 
 export async function POST(req: NextRequest) {
@@ -27,31 +19,25 @@ export async function POST(req: NextRequest) {
   }
 
   const body: HypCheckoutBody = await req.json();
-  const { amount, orderId, customer } = body;
+  const { amount, orderId } = body;
 
-  // Build the APISign request
+  // Build the APISign request — customer fills their details on the Hyp Pay page
   const params = new URLSearchParams({
-    action:      "APISign",
-    What:        "SIGN",
-    Sign:        "True",
-    KEY:         key,
-    PassP:       passP,
-    Masof:       masof,
-    Amount:      String(amount),
-    Coin:        "1",           // ILS
-    Order:       orderId,
-    PageLang:    "HEB",
-    sendemail:   "True",
-    MoreData:    "True",
-    ClientName:  customer.firstName,
-    ClientLName: customer.lastName,
-    email:       customer.email,
-    cell:        customer.phone,
-    street:      customer.address,
-    city:        customer.city,
+    action:    "APISign",
+    What:      "SIGN",
+    Sign:      "True",
+    KEY:       key,
+    PassP:     passP,
+    Masof:     masof,
+    Amount:    String(amount),
+    Coin:      "1",      // ILS
+    Order:     orderId,
+    PageLang:  "HEB",
+    sendemail: "True",
+    MoreData:  "True",
     // Success/failure URLs — also configure these in your Hyp terminal dashboard
-    SuccessUrl:  `${siteUrl}/payment/success`,
-    ErrorUrl:    `${siteUrl}/payment/failure`,
+    SuccessUrl: `${siteUrl}/payment/success`,
+    ErrorUrl:   `${siteUrl}/payment/failure`,
   });
 
   let signedParams: string;
