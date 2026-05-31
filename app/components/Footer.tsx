@@ -31,10 +31,10 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t" style={{ borderColor: "white" }}>
       <div className="site-container px-6 lg:px-12 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-0">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-6 gap-x-0">
 
-          {/* Logo + tagline — centered */}
-          <div className="flex flex-col items-center text-center gap-3">
+          {/* Logo + tagline — centered — full width on mobile */}
+          <div className="col-span-2 sm:col-span-1 flex flex-col items-center text-center gap-3">
             <Link href="/">
               <Image src="/assets/logo.svg" alt="XVAPE" width={100} height={40} className="h-8 w-auto" />
             </Link>
@@ -45,12 +45,12 @@ export default function Footer() {
 
           {/* Link columns - centered */}
           {columns.map((col) => (
-            <ul key={col.id} className="flex flex-col items-center gap-3 text-center">
+            <ul key={col.id} className="flex flex-col items-center gap-3 text-center sm:mt-0 mt-2">
               {col.links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-xl transition-opacity hover:opacity-100"
+                    className="text-base sm:text-xl transition-opacity hover:opacity-100"
                   >
                     {link.label}
                   </Link>
