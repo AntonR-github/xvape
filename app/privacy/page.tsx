@@ -16,8 +16,8 @@ export default function PrivacyPolicyPage() {
 
       {/* Hero Bar */}
       <HeroBar
-        title="מדיניות פרטיות"
-        subtitle="ביטובי מרקט לעסקים"
+        title="הפתרון המתקדם לבערה הישירה"
+        subtitle="טכנולוגיית אידוי חכמה שמוציאה יותר בכל שאיפה"
         imageSrc="/assets/img/hprod.jpg"
       />
 
